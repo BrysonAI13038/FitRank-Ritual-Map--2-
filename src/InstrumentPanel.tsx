@@ -227,7 +227,7 @@ function HomeScreen({ onWorkout, onFood }: { onWorkout: () => void; onFood: () =
         gap: 0, margin: "0 -20px" }}>
         {[
           { value: "18", label: "Workouts" },
-          { value: "6",  label: "Day streak" },
+          { value: "6",  label: "Workouts this week" },
           { value: "3",  label: "PRs this mo." },
         ].map(({ value, label }, i) => (
           <div key={label} style={{
