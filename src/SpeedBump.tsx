@@ -154,11 +154,11 @@ function PromptScreen({ onNext }: { onNext: () => void }) {
 
   return (
     <Phone screen="prompt">
-      <ScreenHeader eyebrow="Before you log" title="What did you improve today?" />
+      <ScreenHeader eyebrow="Before you log" title="What improved this week?" />
 
       <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: dim,
         lineHeight: 1.6, marginBottom: 20 }}>
-        Take a moment. Think about what actually changed since your last session.
+        Take a moment. Compare your recent workouts with last week.
       </p>
 
       {/* reflection checkboxes */}
@@ -376,7 +376,7 @@ function DoneScreen({ onReset }: { onReset: () => void }) {
         <Tag>Next step</Tag>
         <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: dim,
           marginTop: 4, lineHeight: 1.5 }}>
-          Come back after your next workout and try to beat this.
+          Log your next workout and track your progress week by week.
         </p>
       </div>
 
