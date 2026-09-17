@@ -1,322 +1,179 @@
 import { useState } from "react";
 
 type Screen = 1 | 2 | 3;
+type Workout = { weight: number; reps: number };
+const previous: Workout = { weight: 185, reps: 8 };
+const heading = { fontFamily: "Barlow Condensed, sans-serif" };
+const card = "rounded-[2px] border border-[#26262b] bg-[#161618] p-4";
+const accentCard = "rounded-[2px] border border-[#f59e0b]/25 bg-[#f59e0b]/5 p-4";
+const primary = "w-full rounded-[1px] bg-[#f59e0b] px-3 py-3 text-[13px] font-semibold tracking-wide text-black transition-colors hover:bg-[#e4930a] cursor-pointer disabled:cursor-default disabled:bg-[#26262b] disabled:text-[#71717a] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f59e0b]";
+const secondary = "w-full rounded-[1px] border border-[#3f3f46] px-3 py-3 text-[13px] text-[#a1a1aa] transition-colors hover:border-[#71717a] hover:text-white cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f59e0b]";
 
-function PhoneFrame({ screen, total, children }: { screen: Screen; total: number; children: React.ReactNode }) {
+function improved(workout: Workout) {
+  return workout.weight >= previous.weight && workout.reps >= previous.reps &&
+    (workout.weight > previous.weight || workout.reps > previous.reps);
+}
+
+function PhoneFrame({ screen, children }: { screen: Screen; children: React.ReactNode }) {
   return (
-    <div className="flex flex-col items-center py-10 px-6 font-mono">
-      <p className="text-[10px] tracking-widest uppercase text-neutral-400 mb-4">
-        Signature Interaction · Low-fi Sketch
-      </p>
-      <div
-        className="relative bg-neutral-50 border-2 border-neutral-400 w-72 rounded-sm overflow-hidden"
-        style={{ minHeight: 600 }}
-      >
-        {/* Notch */}
-        <div className="flex justify-center pt-3 pb-1">
-          <div className="w-16 h-1.5 bg-neutral-300 rounded-full" />
+    <div className="flex min-h-screen flex-col items-center bg-[#f4f4f5] px-6 py-10" style={{ fontFamily: "Inter, sans-serif" }}>
+      <p className="mb-4 text-[10px] uppercase tracking-[0.14em] text-[#a1a1aa]">Signature Interaction</p>
+      <div className="w-72 overflow-hidden rounded-[2px] bg-[#0c0c0e] text-[#f4f4f5] shadow-[0_8px_40px_rgba(0,0,0,0.45)]" style={{ colorScheme: "dark" }}>
+        <div className="flex justify-center pt-3 pb-2"><div className="h-[5px] w-[60px] rounded-full bg-[#26262b]" /></div>
+        <div className="px-5 pt-3 pb-9">
+          <div className="mb-6 flex items-center justify-between border-b border-[#26262b] pb-4">
+            <span className="text-base font-bold tracking-[0.06em]" style={heading}>FITRANK</span>
+            <span className="text-[9px] uppercase tracking-widest text-[#a1a1aa]">Step {screen} of 3</span>
+          </div>
+          <ol className="mb-6 grid grid-cols-3 gap-2" aria-label="Workout progress">
+            {["Log", "Compare", "Earn ELO"].map((label, i) => (
+              <li key={label} aria-current={screen === i + 1 ? "step" : undefined} className={`border-t-2 pt-2 text-[9px] uppercase tracking-widest ${i < screen ? "border-[#f59e0b] text-[#f59e0b]" : "border-[#26262b] text-[#71717a]"}`}>
+                {label}
+              </li>
+            ))}
+          </ol>
+          {children}
         </div>
-
-        {/* Step indicator */}
-        <div className="flex items-center gap-1.5 px-5 pt-3 pb-0">
-          {([1, 2, 3] as Screen[]).map((s) => (
-            <div key={s} className="flex items-center gap-1.5">
-              <div className={`w-2 h-2 border ${screen === s ? "bg-neutral-800 border-neutral-800" : s < screen ? "bg-neutral-400 border-neutral-400" : "bg-white border-neutral-300"}`} />
-              {s < total && <div className={`h-px w-6 ${s < screen ? "bg-neutral-400" : "bg-neutral-200"}`} />}
-            </div>
-          ))}
-          <p className="text-[8px] text-neutral-400 ml-1 uppercase tracking-widest">Step {screen} of 3</p>
-        </div>
-
-        <div className="px-5 pt-4 pb-8">{children}</div>
       </div>
     </div>
   );
 }
 
 function Label({ children }: { children: React.ReactNode }) {
-  return <p className="text-[9px] uppercase tracking-widest text-neutral-400 mb-1">{children}</p>;
+  return <p className="mb-1 text-[9px] uppercase tracking-[0.12em] text-[#a1a1aa]">{children}</p>;
+}
+function Title({ children }: { children: React.ReactNode }) {
+  return <h2 className="mb-2 text-[28px] font-bold leading-tight tracking-[0.02em]" style={heading}>{children}</h2>;
 }
 
-function SectionDivider({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="border-b border-dashed border-neutral-300 pb-2 mb-4">
-      <p className="text-[9px] uppercase tracking-widest text-neutral-400">{children}</p>
-    </div>
-  );
-}
-
-// ── Screen 1: Log ────────────────────────────────────────────────
-function Screen1({ onNext }: { onNext: () => void }) {
+function Screen1({ onNext }: { onNext: (workout: Workout) => void }) {
   const [weight, setWeight] = useState("195");
   const [reps, setReps] = useState("8");
-
+  const valid = weight.trim() !== "" && Number.isFinite(Number(weight)) && Number(weight) > 0 && Number.isInteger(Number(reps)) && Number(reps) > 0;
   return (
-    <PhoneFrame screen={1} total={3}>
-      <SectionDivider>FitRank · Log Workout</SectionDivider>
-
-      {/* Exercise locked for this flow */}
-      <div className="border border-neutral-300 p-3 mb-4">
-        <Label>Exercise</Label>
-        <p className="text-sm font-semibold text-neutral-800">Bench Press</p>
-      </div>
-
-      {/* Inputs */}
-      <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="border border-neutral-400 p-3">
-          <Label>Weight (lbs)</Label>
-          <input
-            type="number"
-            value={weight}
-            onChange={(e) => setWeight(e.target.value)}
-            className="w-full bg-transparent text-sm font-semibold text-neutral-800 outline-none"
-          />
+    <PhoneFrame screen={1}>
+      <Title>Put in the work.</Title>
+      <p className="mb-6 text-xs leading-relaxed text-[#a1a1aa]">Log your set. See your progress. Earn your ELO.</p>
+      <div className={`${card} mb-4`}><Label>Exercise</Label><p className="text-[24px] font-semibold" style={heading}>Bench Press</p></div>
+      <form onSubmit={e => { e.preventDefault(); if (valid) onNext({ weight: Number(weight), reps: Number(reps) }); }}>
+        <div className="mb-4 grid grid-cols-2 gap-3">
+          {[
+            { id: "signature-weight", label: "Weight (lbs)", value: weight, set: setWeight, step: "any" },
+            { id: "signature-reps", label: "Reps", value: reps, set: setReps, step: "1" },
+          ].map(field => (
+            <div key={field.id}>
+              <label htmlFor={field.id} className="mb-2 block text-[9px] uppercase tracking-widest text-[#a1a1aa]">{field.label}</label>
+              <input id={field.id} type="number" required min={field.step === "1" ? 1 : 0.01} step={field.step} value={field.value} onChange={e => field.set(e.target.value)} className="w-full rounded-[1px] border border-[#26262b] bg-[#161618] px-3 py-3 text-lg outline-none focus:border-[#f59e0b]" />
+            </div>
+          ))}
         </div>
-        <div className="border border-neutral-400 p-3">
-          <Label>Reps</Label>
-          <input
-            type="number"
-            value={reps}
-            onChange={(e) => setReps(e.target.value)}
-            className="w-full bg-transparent text-sm font-semibold text-neutral-800 outline-none"
-          />
+        <div className={`${card} mb-6`}>
+          <Label>Your previous best</Label>
+          <div className="mt-2 flex items-baseline justify-between"><span className="text-xs text-[#a1a1aa]">185 lbs · 8 reps</span><span className="text-[9px] text-[#71717a]">Sep 14</span></div>
         </div>
-      </div>
-
-      {/* Previous best — visible before submitting */}
-      <div className="border border-dashed border-neutral-300 p-3 mb-6">
-        <Label>Your previous best</Label>
-        <div className="flex justify-between items-baseline mt-1">
-          <span className="text-xs text-neutral-500">185 lbs · 8 reps</span>
-          <span className="text-[9px] text-neutral-400">Sep 14</span>
-        </div>
-      </div>
-
-      <button
-        onClick={onNext}
-        className="w-full border border-neutral-700 text-xs py-2.5 tracking-wide text-neutral-800 hover:bg-neutral-100 transition-colors"
-      >
-        Submit workout →
-      </button>
+        <button disabled={!valid} className={primary}>Submit workout →</button>
+      </form>
     </PhoneFrame>
   );
 }
 
-// ── Screen 2: Comparison ─────────────────────────────────────────
-function Screen2({ onNext }: { onNext: () => void }) {
+function Screen2({ workout, onNext }: { workout: Workout; onNext: () => void }) {
+  const bonus = improved(workout);
   return (
-    <PhoneFrame screen={2} total={3}>
-      <SectionDivider>FitRank · Comparing</SectionDivider>
-
-      <p className="text-xs font-semibold text-neutral-800 mb-4 leading-snug">
-        Here's how today stacks up against your last session.
-      </p>
-
-      {/* Side-by-side comparison */}
-      <div className="border border-neutral-400 mb-4 overflow-hidden">
-        {/* Column headers */}
-        <div className="grid grid-cols-3 border-b border-neutral-400 bg-neutral-100">
-          <div className="px-3 py-2">
-            <p className="text-[8px] uppercase tracking-widest text-neutral-400">Metric</p>
-          </div>
-          <div className="px-3 py-2 border-l border-neutral-400">
-            <p className="text-[8px] uppercase tracking-widest text-neutral-400">Last time</p>
-            <p className="text-[8px] text-neutral-400">Sep 14</p>
-          </div>
-          <div className="px-3 py-2 border-l border-neutral-400">
-            <p className="text-[8px] uppercase tracking-widest text-neutral-500 font-semibold">Today</p>
-            <p className="text-[8px] text-neutral-400">Sep 16</p>
-          </div>
-        </div>
-
-        {/* Weight row */}
-        <div className="grid grid-cols-3 border-b border-neutral-200">
-          <div className="px-3 py-2.5">
-            <p className="text-[9px] text-neutral-500">Weight</p>
-          </div>
-          <div className="px-3 py-2.5 border-l border-neutral-200">
-            <p className="text-xs text-neutral-500">185 lbs</p>
-          </div>
-          <div className="px-3 py-2.5 border-l border-neutral-200 flex items-center justify-between">
-            <p className="text-xs font-semibold text-neutral-800">195 lbs</p>
-            <p className="text-[9px] font-semibold text-neutral-700">+10</p>
-          </div>
-        </div>
-
-        {/* Reps row */}
-        <div className="grid grid-cols-3">
-          <div className="px-3 py-2.5">
-            <p className="text-[9px] text-neutral-500">Reps</p>
-          </div>
-          <div className="px-3 py-2.5 border-l border-neutral-200">
-            <p className="text-xs text-neutral-500">8</p>
-          </div>
-          <div className="px-3 py-2.5 border-l border-neutral-200 flex items-center justify-between">
-            <p className="text-xs font-semibold text-neutral-800">8</p>
-            <p className="text-[9px] text-neutral-400">same</p>
-          </div>
-        </div>
+    <PhoneFrame screen={2}>
+      <Title>Your work, in perspective.</Title>
+      <p className="mb-6 text-xs leading-relaxed text-[#a1a1aa]">Bench Press · Compared with your previous session.</p>
+      <div className="mb-4 overflow-hidden rounded-[2px] border border-[#26262b] bg-[#161618]">
+        <table className="w-full text-left text-xs">
+          <thead className="border-b border-[#26262b] text-[9px] text-[#a1a1aa]"><tr>
+            <th className="px-3 py-3 font-normal">Metric</th><th className="px-2 py-3 font-normal">Last time<span className="block text-[8px]">Sep 14</span></th><th className="px-2 py-3 font-normal text-[#f59e0b]">Today<span className="block text-[8px]">Sep 16</span></th>
+          </tr></thead>
+          <tbody>{([
+            { label: "Weight", before: previous.weight, now: workout.weight, unit: " lbs" },
+            { label: "Reps", before: previous.reps, now: workout.reps, unit: "" },
+          ]).map(row => {
+            const delta = row.now - row.before;
+            return <tr key={row.label} className="border-b border-[#26262b] last:border-0">
+              <th className="px-3 py-3 font-normal text-[#a1a1aa]">{row.label}</th>
+              <td className="px-2 py-3 text-[#a1a1aa]">{row.before}{row.unit}</td>
+              <td className="px-2 py-3 font-medium">{row.now}{row.unit}<span className={`mt-1 block text-[9px] ${delta > 0 ? "text-[#f59e0b]" : "text-[#a1a1aa]"}`}>{delta === 0 ? "same" : `${delta > 0 ? "+" : ""}${Number(delta.toFixed(2))}${row.unit}`}</span></td>
+            </tr>;
+          })}</tbody>
+        </table>
       </div>
-
-      {/* Improvement callout */}
-      <div className="border border-neutral-800 p-3 mb-4">
-        <Label>Improvement detected</Label>
-        <p className="text-sm font-semibold text-neutral-800 mt-0.5">+10 lbs on Bench Press</p>
-        <p className="text-[10px] text-neutral-500 mt-1 leading-relaxed">
-          Weight increased from 185 → 195 lbs at the same rep count.
-        </p>
+      <div className={`${accentCard} mb-4`}>
+        <Label>{bonus ? "Improvement detected" : "Workout completed"}</Label>
+        <p className="text-[22px] font-semibold" style={heading}>{bonus ? "You've raised the bar." : "Showing up still counts."}</p>
+        <p className="mt-2 text-xs leading-relaxed text-[#a1a1aa]">{bonus ? "More weight or reps, with neither below your previous session. That's +8 bonus ELO." : "No improvement bonus this time. You still earn +12 ELO for completing your workout."}</p>
       </div>
-
-      {/* No-shame note for flat/regression cases */}
-      <div className="border border-dashed border-neutral-300 p-3 mb-5">
-        <p className="text-[9px] text-neutral-400 leading-relaxed">
-          <span className="text-neutral-500 font-semibold">Note:</span> ELO is awarded for completing a workout. Improvement adds a bonus — but showing up always counts.
-        </p>
-      </div>
-
-      <button
-        onClick={onNext}
-        className="w-full border border-neutral-700 text-xs py-2.5 tracking-wide text-neutral-800 hover:bg-neutral-100 transition-colors"
-      >
-        See your ELO →
-      </button>
+      <p className="mb-6 text-[11px] leading-relaxed text-[#a1a1aa]">Progress takes more than one session. Completion earns +12 ELO; improvement adds +8. No ELO is deducted for flat or down sessions.</p>
+      <button onClick={onNext} className={primary}>See your ELO →</button>
     </PhoneFrame>
   );
 }
 
-// ── Screen 3: ELO Award ──────────────────────────────────────────
-function Screen3({ onReset }: { onReset: () => void }) {
-  const [expanded, setExpanded] = useState(false);
-
+function Screen3({ workout, onReset }: { workout: Workout; onReset: () => void }) {
+  const [expanded, setExpanded] = useState(true);
   const eloBase = 12;
-  const eloBonus = 8;
+  const eloBonus = improved(workout) ? 8 : 0;
   const eloTotal = eloBase + eloBonus;
   const eloBefore = 1240;
   const eloAfter = eloBefore + eloTotal;
-  const rankMin = 1200;
-  const rankMax = 1300;
-  const pctBefore = ((eloBefore - rankMin) / (rankMax - rankMin)) * 100;
-  const pctAfter = Math.min(((eloAfter - rankMin) / (rankMax - rankMin)) * 100, 100);
-
+  const remaining = 1300 - eloAfter;
+  const pctAfter = eloAfter - 1200;
   return (
-    <PhoneFrame screen={3} total={3}>
-      <SectionDivider>FitRank · ELO Awarded</SectionDivider>
-
-      {/* Main ELO number — the moment */}
-      <div className="border border-neutral-800 p-4 mb-4">
-        <div className="flex items-end justify-between mb-3">
-          <div>
-            <Label>ELO earned</Label>
-            <p className="text-4xl font-semibold text-neutral-900 leading-none tracking-tight">
-              +{eloTotal}
-            </p>
-          </div>
-          <div className="text-right">
-            <Label>New total</Label>
-            <div className="flex items-baseline gap-1.5">
-              <p className="text-sm text-neutral-400 line-through">{eloBefore.toLocaleString()}</p>
-              <p className="text-xl font-semibold text-neutral-900">{eloAfter.toLocaleString()}</p>
-            </div>
-          </div>
+    <PhoneFrame screen={3}>
+      <Title>Progress, earned.</Title>
+      <p className="mb-6 text-xs leading-relaxed text-[#a1a1aa]">{eloBonus ? "A stronger set. A step closer to Gold." : "Another session in the bank. Keep building."}</p>
+      <div className="mb-5 rounded-[2px] border border-[#f59e0b]/40 bg-gradient-to-b from-[#f59e0b]/15 to-[#161618] px-4 py-6 shadow-[0_0_32px_rgba(245,158,11,0.08)]">
+        <div className="text-center" aria-live="polite">
+          <Label>ELO earned</Label>
+          <p className="text-[88px] font-bold leading-none tracking-tight text-[#f59e0b]" style={heading}>+{eloTotal}</p>
+          <p className="mt-2 text-[11px] text-[#a1a1aa]">+{eloBase} completion <span className="mx-1 text-[#52525b]">/</span> +{eloBonus} improvement</p>
         </div>
-
-        {/* Progress bar — moving */}
-        <div className="mb-1">
-          <div className="flex justify-between mb-1">
-            <p className="text-[8px] text-neutral-500">Silver II</p>
-            <p className="text-[8px] text-neutral-500">Gold I</p>
-          </div>
-          <div className="relative border border-neutral-400 h-3 w-full bg-white">
-            {/* Before marker */}
-            <div
-              className="absolute top-0 bottom-0 bg-neutral-300"
-              style={{ width: `${pctBefore}%` }}
-            />
-            {/* After fill */}
-            <div
-              className="absolute top-0 bottom-0 bg-neutral-800"
-              style={{ width: `${pctAfter}%` }}
-            />
-            {/* Seam tick */}
-            <div
-              className="absolute top-0 bottom-0 w-px bg-white"
-              style={{ left: `${pctBefore}%` }}
-            />
-          </div>
-          <div className="flex justify-between mt-1">
-            <p className="text-[8px] text-neutral-400">{eloBefore} before</p>
-            <p className="text-[8px] font-semibold text-neutral-700">{eloAfter} now · 42 to Gold I</p>
-          </div>
+        <div className="mt-6 flex items-baseline justify-between border-t border-[#f59e0b]/15 pt-4">
+          <Label>New total</Label>
+          <p className="text-[28px] font-semibold" style={heading}><span className="mr-2 text-base text-[#71717a] line-through">1,240</span>{eloAfter.toLocaleString()}</p>
         </div>
+        <div className="mt-4 flex justify-between text-[9px] text-[#a1a1aa]"><span>Silver II · 1,200</span><span>Gold I · 1,300</span></div>
+        <div role="progressbar" aria-label="Progress from Silver II to Gold I" aria-valuemin={1200} aria-valuemax={1300} aria-valuenow={eloAfter} className="relative mt-2 h-2 overflow-hidden rounded-[1px] bg-[#26262b]">
+          <div className="absolute inset-y-0 left-0 bg-[#78450a]" style={{ width: "40%" }} />
+          <div className="absolute inset-y-0 bg-[#f59e0b] shadow-[0_0_12px_#f59e0b]" style={{ left: "40%", width: `${pctAfter - 40}%` }} />
+          <div className="absolute inset-y-0 w-px bg-[#f4f4f5]" style={{ left: "40%" }} />
+        </div>
+        <div className="mt-2 flex justify-between text-[9px]"><span className="text-[#a1a1aa]">1,240 before</span><span className="text-[#f59e0b]">{remaining} ELO to Gold I</span></div>
       </div>
-
-      {/* The seam — how ELO was calculated */}
-      <div className="border border-neutral-400 mb-4">
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="w-full flex items-center justify-between px-3 py-2.5 text-left hover:bg-neutral-100 transition-colors"
-        >
-          <p className="text-[9px] uppercase tracking-widest text-neutral-500">How this was calculated</p>
-          <p className="text-[9px] text-neutral-400">{expanded ? "▲" : "▼"}</p>
+      <div className="mb-4 rounded-[2px] border border-[#26262b] bg-[#161618]">
+        <button onClick={() => setExpanded(!expanded)} aria-expanded={expanded} aria-controls="signature-breakdown" className="flex w-full cursor-pointer items-center justify-between px-4 py-3 text-left text-[10px] text-[#a1a1aa] hover:text-white focus-visible:outline-2 focus-visible:outline-[#f59e0b]">
+          How this was calculated <span aria-hidden="true">{expanded ? "−" : "+"}</span>
         </button>
-        {expanded && (
-          <div className="border-t border-neutral-300 px-3 pb-3 pt-2 space-y-2">
-            <div className="flex justify-between items-baseline py-1.5 border-b border-neutral-200">
-              <div>
-                <p className="text-[10px] text-neutral-700">Workout completed</p>
-                <p className="text-[8px] text-neutral-400">Base ELO — awarded for showing up</p>
-              </div>
-              <p className="text-xs font-semibold text-neutral-800">+{eloBase}</p>
-            </div>
-            <div className="flex justify-between items-baseline py-1.5 border-b border-neutral-200">
-              <div>
-                <p className="text-[10px] text-neutral-700">Improvement bonus</p>
-                <p className="text-[8px] text-neutral-400">+10 lbs vs. last Bench Press session</p>
-              </div>
-              <p className="text-xs font-semibold text-neutral-800">+{eloBonus}</p>
-            </div>
-            <div className="flex justify-between items-baseline pt-1">
-              <p className="text-[10px] font-semibold text-neutral-700">Total ELO earned</p>
-              <p className="text-xs font-semibold text-neutral-800">+{eloTotal}</p>
-            </div>
-            <div className="border-t border-dashed border-neutral-300 pt-2 mt-1">
-              <p className="text-[9px] text-neutral-400 leading-relaxed">
-                ELO is calculated from two signals: <span className="text-neutral-600">workout completion</span> and <span className="text-neutral-600">improvement compared to your previous session</span> on the same exercise. No ELO is deducted for flat or down sessions.
-              </p>
-            </div>
-          </div>
-        )}
+        {expanded && <div id="signature-breakdown" className="border-t border-[#26262b] px-4 pb-4">
+          {[
+            { label: "Workout completed", detail: "Base ELO — awarded for showing up", value: eloBase },
+            { label: "Improvement bonus", detail: eloBonus ? `${workout.weight} lbs × ${workout.reps} reps vs. 185 lbs × 8` : "No bonus this session. No penalty.", value: eloBonus },
+            { label: "Total ELO earned", detail: "", value: eloTotal },
+          ].map(row => <div key={row.label} className="flex items-baseline justify-between gap-3 border-b border-[#26262b] py-3 last:border-0">
+            <div><p className="text-[11px]">{row.label}</p>{row.detail && <p className="mt-1 text-[9px] leading-relaxed text-[#a1a1aa]">{row.detail}</p>}</div><span className="text-sm font-semibold text-[#f59e0b]">+{row.value}</span>
+          </div>)}
+          <p className="border-t border-[#26262b] pt-3 text-[10px] leading-relaxed text-[#a1a1aa]">Improvement means more weight or reps with neither decreasing, compared with your previous session on the same exercise. Flat or down sessions still earn completion ELO.</p>
+        </div>}
       </div>
-
-      {/* Rank status */}
-      <div className="border border-dashed border-neutral-300 p-3 mb-5">
-        <div className="flex items-baseline justify-between">
-          <Label>Current rank</Label>
-          <p className="text-[9px] text-neutral-400">no change</p>
-        </div>
-        <p className="text-sm font-semibold text-neutral-800 mt-0.5">Silver II</p>
-        <p className="text-[9px] text-neutral-400 mt-1">42 ELO until Gold I. Keep going.</p>
+      <div className={`${card} mb-6`}>
+        <div className="flex justify-between"><Label>Current rank</Label><span className="text-[9px] text-[#a1a1aa]">no change</span></div>
+        <p className="text-[24px] font-semibold" style={heading}>Silver II</p>
+        <p className="mt-1 text-[11px] text-[#a1a1aa]">{remaining} ELO until Gold I. Keep going.</p>
       </div>
-
-      <button
-        onClick={onReset}
-        className="w-full border border-neutral-300 text-xs py-2.5 tracking-wide text-neutral-500 hover:border-neutral-500 hover:text-neutral-700 transition-colors"
-      >
-        ← Back to start
-      </button>
+      <button onClick={onReset} className={secondary}>← Back to start</button>
     </PhoneFrame>
   );
 }
 
-// ── Root ─────────────────────────────────────────────────────────
 export default function SignatureInteraction() {
   const [screen, setScreen] = useState<Screen>(1);
-
-  return (
-    <>
-      {screen === 1 && <Screen1 onNext={() => setScreen(2)} />}
-      {screen === 2 && <Screen2 onNext={() => setScreen(3)} />}
-      {screen === 3 && <Screen3 onReset={() => setScreen(1)} />}
-    </>
-  );
+  const [workout, setWorkout] = useState<Workout>({ weight: 195, reps: 8 });
+  return <>
+    {screen === 1 && <Screen1 onNext={entry => { setWorkout(entry); setScreen(2); }} />}
+    {screen === 2 && <Screen2 workout={workout} onNext={() => setScreen(3)} />}
+    {screen === 3 && <Screen3 workout={workout} onReset={() => setScreen(1)} />}
+  </>;
 }
