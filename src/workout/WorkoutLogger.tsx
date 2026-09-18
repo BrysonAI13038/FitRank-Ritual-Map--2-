@@ -5,7 +5,7 @@ import WorkoutReward from "./WorkoutReward";
 import { saveWorkout, type Reward } from "./storage";
 import type { Workout } from "./model";
 
-export default function WorkoutLogger({ onBack }: { onBack: () => void }) {
+export default function WorkoutLogger({ onBack, onSaved }: { onBack: () => void; onSaved?: () => void }) {
   const [reward, setReward] = useState<Reward | null>(null);
   const [error, setError] = useState("");
   const submissionId = useRef<string | null>(null);
@@ -20,6 +20,7 @@ export default function WorkoutLogger({ onBack }: { onBack: () => void }) {
       // Serialize read/modify/write across tabs where Web Locks is supported.
       const saved = navigator.locks ? await navigator.locks.request("fitrank-workout-save", commit) : commit();
       setReward(saved);
+      onSaved?.();
     } catch (cause) {
       setError(cause instanceof Error && cause.message.includes("Nothing was overwritten") ? cause.message : "Couldn’t save your workout. Check browser storage and try again. Your inputs are still here.");
       submitting.current = false;

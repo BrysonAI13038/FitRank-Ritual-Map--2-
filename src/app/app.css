@@ -1,0 +1,83 @@
+.fitrank-app { min-height:100vh; background:#0c0c0e; color:#f4f4f5; font-family:Inter,sans-serif; font-size:13px; line-height:1.6; color-scheme:dark; font-variant-numeric:tabular-nums; }
+.fitrank-app * { box-sizing:border-box; }
+.fitrank-app h1,.fitrank-app h2,.fitrank-app h3,.app-wordmark { font-family:"Barlow Condensed",sans-serif; line-height:1.15; }
+.fitrank-app h1 { font-size:32px; font-weight:700; letter-spacing:.02em; }
+.fitrank-app h2 { font-size:24px; font-weight:600; }
+.fitrank-app h3 { font-size:20px; font-weight:600; }
+.fitrank-app p { color:#b7b7c0; }
+.app-header { height:80px; max-width:1120px; margin:auto; padding:0 32px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #26262b; }
+.app-wordmark { font-size:26px; font-weight:700; letter-spacing:.08em; text-decoration:none; }
+.app-header>span { font-size:11px; color:#96969f; }
+.app-nav { display:flex; gap:8px; max-width:1120px; margin:auto; padding:16px 32px; border-bottom:1px solid #26262b; }
+.app-nav a { padding:8px 16px; color:#b7b7c0; border-bottom:2px solid transparent; text-decoration:none; transition:color 160ms,background-color 160ms; }
+.app-nav a:hover { color:#f4f4f5; background:#161618; }
+.app-nav a[aria-current] { color:#f59e0b; border-color:#f59e0b; }
+.app-main { max-width:1120px; margin:auto; padding:32px 32px 64px; outline:none; }
+.app-page-heading { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:32px; }
+.app-page-heading p { margin-top:8px; }
+.app-dashboard { display:grid; grid-template-columns:minmax(260px, .85fr) minmax(0,1.4fr); gap:24px; align-items:start; }
+.app-stack { display:grid; gap:24px; min-width:0; }
+.app-card { padding:24px; border:1px solid #26262b; border-radius:2px; background:#161618; min-width:0; }
+.app-card>p { margin-top:12px; }
+.app-card>h3+p { margin-top:8px; }
+.app-label { font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:#96969f; }
+.app-rank { text-align:center; padding:40px 24px 28px; }
+.app-emblem { width:64px; height:64px; margin:8px auto 32px; display:grid; place-items:center; border:2px solid #f59e0b; background:#78450a33; transform:rotate(45deg); }
+.app-emblem span { transform:rotate(-45deg); color:#f59e0b; font:700 28px "Barlow Condensed",sans-serif; }
+.app-rank h2 { margin-top:8px; font-size:30px; text-transform:uppercase; letter-spacing:.06em; }
+.app-rank .app-elo { color:#f59e0b; font:700 64px/1.1 "Barlow Condensed",sans-serif; margin-top:8px; }
+.app-rank-track { height:8px; background:#26262b; margin-top:28px; border-radius:1px; overflow:hidden; }
+.app-rank-track>div { height:100%; background:#f59e0b; }
+.app-rank-labels { display:flex; justify-content:space-between; font-size:11px; color:#b7b7c0; margin-top:8px; }
+.fitrank-app .app-accent { color:#f59e0b; }
+.app-rank .app-accent { font-size:12px; margin-top:16px; }
+.app-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); padding:20px 8px; text-align:center; }
+.app-stats>div+div { border-left:1px solid #26262b; }
+.app-stats strong { display:block; font:700 30px/1.2 "Barlow Condensed",sans-serif; }
+.app-stats span { display:block; margin:6px 6px 0; font-size:10px; color:#b7b7c0; line-height:1.5; }
+.fitrank-app blockquote { margin:12px 0 24px; color:#f4f4f5; font-size:14px; }
+.app-actions { display:flex; flex-wrap:wrap; gap:12px; }
+.app-button { display:inline-flex; justify-content:center; align-items:center; padding:12px 18px; border:1px solid #f59e0b; border-radius:1px; background:#f59e0b; color:#000; font-size:13px; font-weight:600; cursor:pointer; text-decoration:none; transition:background-color 160ms,color 160ms,border-color 160ms,opacity 160ms; }
+.app-button:hover { opacity:.88; }
+.app-button:active { filter:brightness(.92); }
+.app-secondary { background:transparent; color:#b7b7c0; border-color:#3f3f46; }
+.app-secondary:hover { color:#fff; border-color:#71717a; }
+.app-button:disabled { opacity:.45; cursor:default; }
+.fitrank-app a:focus-visible,.fitrank-app button:focus-visible { outline:2px solid #f59e0b; outline-offset:3px; }
+.app-section-heading { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px; }
+.app-section-heading a { font-size:11px; color:#b7b7c0; }
+.app-section-title { margin-bottom:16px; }
+.app-workouts { display:grid; gap:12px; }
+.app-row { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:11px; color:#96969f; }
+.app-exercise { margin-top:16px; }
+.app-exercise>p { margin-top:4px; font-size:11px; }
+.app-sets { padding:0; list-style:none; margin-top:12px; }
+.app-sets li { display:flex; justify-content:space-between; gap:12px; padding:8px 0; border-top:1px solid #26262b; font-size:12px; }
+.app-sets li>span:first-child { color:#96969f; }
+.app-comparison { border-top:1px solid #26262b; padding-top:16px; margin-top:20px; }
+.app-comparison p { margin-top:6px; font-size:12px; }
+.app-comparison .app-current { color:#f4f4f5; font-size:14px; }
+.app-empty { max-width:600px; padding:32px; }
+.app-empty h2 { margin-top:12px; }
+.app-empty .app-button,.app-about { margin-top:24px; }
+.app-card>button { margin-top:20px; }
+.app-logger { max-width:440px; margin:0 auto; }
+.app-error { margin-bottom:24px; }
+.app-skip { position:fixed; top:-100px; left:16px; padding:12px; background:#f59e0b; color:#000; z-index:30; }
+.app-skip:focus { top:12px; }
+@media(max-width:700px) {
+ .app-header { height:64px; padding:0 20px; }
+ .app-header>span { font-size:10px; }
+ .app-main { padding:24px 20px calc(100px + env(safe-area-inset-bottom)); }
+ .app-nav { position:fixed; z-index:20; bottom:0; left:0; right:0; padding:8px 4px calc(8px + env(safe-area-inset-bottom)); background:#0c0c0e; border-top:1px solid #26262b; gap:0; justify-content:space-around; }
+ .app-nav a { padding:12px 6px; font-size:11px; min-width:0; }
+ .app-dashboard { grid-template-columns:1fr; }
+ .app-page-heading { align-items:flex-start; flex-direction:column; margin-bottom:24px; }
+ .app-page-heading h1 { font-size:28px; }
+ .app-rank { padding:32px 24px 24px; }
+ .app-card { padding:20px; }
+ .app-stats { padding:20px 4px; }
+ .app-actions>* { flex:1; white-space:nowrap; }
+ .app-logger { max-width:440px; }
+}
+@media(prefers-reduced-motion:reduce) { .fitrank-app a,.fitrank-app button { transition:none; } }
