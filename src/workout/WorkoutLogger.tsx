@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import "../instrument-atmosphere.css";
 import WorkoutInput from "./WorkoutInput";
 import WorkoutReward from "./WorkoutReward";
 import { saveWorkout, type Reward } from "./storage";
@@ -24,7 +25,7 @@ export default function WorkoutLogger({ onBack }: { onBack: () => void }) {
       submitting.current = false;
     }
   }
-  return <section style={{ fontFamily: "Inter, sans-serif", colorScheme: "dark" }} className="text-[#f4f4f5]">
+  return <section style={{ fontFamily: "Inter, sans-serif", colorScheme: "dark" }} className="fitrank-workout-surface text-[#f4f4f5]">
     <h2 className="mb-6 border-b border-[#26262b] pb-4 text-[22px] font-bold tracking-wide" style={{ fontFamily: "Barlow Condensed, sans-serif" }}>{reward ? "SESSION COMPLETE" : "LOG WORKOUT"}</h2>
     {error && <p role="alert" className="mb-4 text-xs leading-relaxed text-[#f59e0b]">{error}</p>}
     {reward ? <WorkoutReward reward={reward} onBack={onBack} /> : <WorkoutInput onSubmit={submit} onCancel={onBack} />}

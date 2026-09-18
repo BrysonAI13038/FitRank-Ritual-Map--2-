@@ -1,5 +1,6 @@
 import { useState } from "react";
 import WorkoutLogger from "./workout/WorkoutLogger";
+import "./instrument-atmosphere.css";
 
 type Screen = "home" | "log-workout" | "log-food" | "done";
 
@@ -16,9 +17,9 @@ const recent = [
 const bg      = "#0c0c0e";
 const surface = "#161618";
 const border  = "#26262b";
-const muted   = "#52525b";
+const muted   = "#96969f";
 const text    = "#f4f4f5";
-const dim     = "#a1a1aa";
+const dim     = "#b7b7c0";
 const amber   = "#f59e0b";
 const amberDim= "#78450a";
 
@@ -29,7 +30,7 @@ function Divider() {
 
 function Tag({ children }: { children: React.ReactNode }) {
   return (
-    <span style={{ fontFamily: "Inter, sans-serif", fontSize: 9, letterSpacing: "0.12em",
+    <span style={{ fontFamily: "Inter, sans-serif", fontSize: 10, lineHeight: 1.5, letterSpacing: "0.08em",
       textTransform: "uppercase", color: muted }}>
       {children}
     </span>
@@ -42,7 +43,7 @@ function PrimaryBtn({ onClick, children }: { onClick: () => void; children: Reac
       width: "100%", background: amber, border: "none", color: "#000",
       fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: 13,
       letterSpacing: "0.04em", padding: "13px 0", cursor: "pointer",
-      transition: "opacity 0.15s",
+      transition: "opacity 160ms ease-out, filter 160ms ease-out",
     }}
       onMouseOver={e => (e.currentTarget.style.opacity = "0.88")}
       onMouseOut={e  => (e.currentTarget.style.opacity = "1")}
@@ -59,7 +60,7 @@ function GhostBtn({ onClick, children, disabled }: { onClick: () => void; childr
       color: disabled ? muted : dim,
       fontFamily: "Inter, sans-serif", fontWeight: 500, fontSize: 13,
       letterSpacing: "0.04em", padding: "12px 0", cursor: disabled ? "default" : "pointer",
-      transition: "border-color 0.15s, color 0.15s",
+      transition: "border-color 160ms ease-out, color 160ms ease-out, filter 160ms ease-out",
     }}
       onMouseOver={e => { if (!disabled) { e.currentTarget.style.borderColor = "#71717a"; e.currentTarget.style.color = text; }}}
       onMouseOut={e  => { if (!disabled) { e.currentTarget.style.borderColor = "#3f3f46"; e.currentTarget.style.color = dim; }}}
@@ -75,10 +76,10 @@ function Phone({ children }: { children: React.ReactNode }) {
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center",
       padding: "40px 24px", background: "#f4f4f5", minHeight: "100vh" }}>
       <p style={{ fontFamily: "Inter, sans-serif", fontSize: 10, letterSpacing: "0.14em",
-        textTransform: "uppercase", color: "#a1a1aa", marginBottom: 16 }}>
+        textTransform: "uppercase", color: "#71717a", marginBottom: 16 }}>
         Instrument Panel v1
       </p>
-      <div style={{
+      <div className="fitrank-instrument" style={{
         width: 288, background: bg, borderRadius: 2,
         overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.45)",
       }}>
@@ -194,7 +195,7 @@ function HomeScreen({ onWorkout, onFood }: { onWorkout: () => void; onFood: () =
       <RankEmblem />
 
       {/* rank name + ELO */}
-      <div style={{ textAlign: "center", marginBottom: 20 }}>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
         <div style={{ fontFamily: "Barlow Condensed, sans-serif", fontWeight: 600,
           fontSize: 28, color: text, letterSpacing: "0.08em", lineHeight: 1 }}>
           SILVER II
@@ -232,13 +233,13 @@ function HomeScreen({ onWorkout, onFood }: { onWorkout: () => void; onFood: () =
           { value: "3",  label: "PRs this mo." },
         ].map(({ value, label }, i) => (
           <div key={label} style={{
-            padding: "14px 0", textAlign: "center",
+            padding: "16px 6px", textAlign: "center",
             borderRight: i < 2 ? `1px solid ${border}` : "none",
           }}>
             <div style={{ fontFamily: "Barlow Condensed, sans-serif", fontWeight: 700,
               fontSize: 26, color: text, lineHeight: 1 }}>{value}</div>
             <div style={{ fontFamily: "Inter, sans-serif", fontSize: 10,
-              color: muted, marginTop: 3, letterSpacing: "0.04em" }}>{label}</div>
+              color: muted, marginTop: 6, lineHeight: 1.4, letterSpacing: "0.01em" }}>{label}</div>
           </div>
         ))}
       </div>
@@ -246,27 +247,27 @@ function HomeScreen({ onWorkout, onFood }: { onWorkout: () => void; onFood: () =
       <Divider />
 
       {/* recent workouts */}
-      <div style={{ margin: "16px 0 6px", display: "flex", justifyContent: "space-between" }}>
+      <div style={{ margin: "24px 0 8px", display: "flex", justifyContent: "space-between" }}>
         <Tag>Recent workouts</Tag>
         <Tag>last 4</Tag>
       </div>
 
-      <div style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: 24 }}>
         {recent.map((w, i) => (
           <div key={i} style={{
             display: "flex", alignItems: "center", gap: 10,
-            padding: "10px 0",
+            padding: "12px 0",
             borderBottom: i < recent.length - 1 ? `1px solid ${border}` : "none",
           }}>
             <div style={{ width: 36, flexShrink: 0 }}>
-              <div style={{ fontFamily: "Inter, sans-serif", fontSize: 10, color: muted }}>{w.date}</div>
+              <div style={{ fontFamily: "Inter, sans-serif", fontSize: 10, lineHeight: 1.5, color: muted }}>{w.date}</div>
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontFamily: "Inter, sans-serif", fontSize: 13, fontWeight: 500,
                 color: text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                 {w.exercise}
               </div>
-              <div style={{ fontFamily: "Inter, sans-serif", fontSize: 11, color: muted, marginTop: 1 }}>
+              <div style={{ fontFamily: "Inter, sans-serif", fontSize: 11, lineHeight: 1.5, color: dim, marginTop: 3 }}>
                 {w.detail}
               </div>
             </div>

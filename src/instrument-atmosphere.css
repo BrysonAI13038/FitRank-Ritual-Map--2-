@@ -1,0 +1,36 @@
+/* Scoped atmosphere only: the existing layouts and mechanics stay in their components. */
+.fitrank-instrument,
+.fitrank-workout-surface {
+  font-variant-numeric: tabular-nums;
+}
+.fitrank-instrument button,
+.fitrank-workout-surface button {
+  transition: color 160ms ease-out, background-color 160ms ease-out,
+    border-color 160ms ease-out, opacity 160ms ease-out, filter 160ms ease-out;
+}
+.fitrank-instrument button:focus-visible,
+.fitrank-workout-surface button:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 3px;
+}
+.fitrank-instrument button:active:not(:disabled),
+.fitrank-workout-surface button:active:not(:disabled) {
+  filter: brightness(0.92);
+}
+.fitrank-instrument input,
+.fitrank-instrument select,
+.fitrank-workout-surface input,
+.fitrank-workout-surface label {
+  transition: border-color 160ms ease-out, background-color 160ms ease-out,
+    color 160ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fitrank-instrument button,
+  .fitrank-instrument input,
+  .fitrank-instrument select,
+  .fitrank-workout-surface button,
+  .fitrank-workout-surface input,
+  .fitrank-workout-surface label {
+    transition: none !important;
+  }
+}
