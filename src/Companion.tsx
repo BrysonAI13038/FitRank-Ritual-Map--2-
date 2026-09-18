@@ -1,4 +1,5 @@
 import { useState } from "react";
+import WorkoutLogger from "./workout/WorkoutLogger";
 
 type Screen = "home" | "log-workout" | "log-food" | "feedback";
 
@@ -97,16 +98,6 @@ function HomeScreen({
           <p className="text-[8px] text-[#a1a1aa]">Silver II</p>
           <p className="text-[8px] text-[#a1a1aa]">Gold I</p>
         </div>
-      </div>
-
-      {/* Motivational message */}
-      <div className="rounded-[2px] border border-[#f59e0b]/15 bg-[#f59e0b]/5 p-4 mb-6">
-        <p className="text-[9px] text-[#f59e0b] uppercase tracking-widest mb-2">
-          A little encouragement
-        </p>
-        <p className="text-xs text-[#a1a1aa] leading-relaxed italic">
-          "You've logged 4 workouts this month. You're building something real."
-        </p>
       </div>
 
       {/* Action buttons */}
@@ -284,12 +275,7 @@ export default function Companion() {
         />
       )}
       {screen === "log-workout" && (
-        <LogWorkoutScreen
-          onDone={(ex) => {
-            setLastExercise(ex);
-            setScreen("feedback");
-          }}
-        />
+        <WorkoutLogger onBack={() => setScreen("home")} />
       )}
       {screen === "log-food" && (
         <LogFoodScreen onBack={() => setScreen("home")} />

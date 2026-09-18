@@ -1,0 +1,26 @@
+@keyframes fitrank-workout-arrive {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fitrank-workout-check {
+  from { transform: scale(0.88); }
+  to { transform: scale(1); }
+}
+.fitrank-workout-success {
+  animation: fitrank-workout-arrive 240ms ease-out both;
+}
+.fitrank-workout-check {
+  animation: fitrank-workout-check 280ms ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fitrank-workout-success, .fitrank-workout-check { animation: none; }
+}
+@keyframes fitrank-elo-gain {
+  0% { opacity: 0; transform: translateY(3px); }
+  15%, 80% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-3px); }
+}
+.fitrank-elo-gain { animation: fitrank-elo-gain 2600ms ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .fitrank-elo-gain { animation: none; }
+}

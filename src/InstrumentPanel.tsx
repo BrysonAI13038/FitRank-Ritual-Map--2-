@@ -1,4 +1,5 @@
 import { useState } from "react";
+import WorkoutLogger from "./workout/WorkoutLogger";
 
 type Screen = "home" | "log-workout" | "log-food" | "done";
 
@@ -499,7 +500,7 @@ export default function InstrumentPanel() {
   return (
     <Phone>
       {screen === "home"        && <HomeScreen onWorkout={() => setScreen("log-workout")} onFood={() => setScreen("log-food")} />}
-      {screen === "log-workout" && <LogWorkoutScreen onDone={() => setScreen("done")} />}
+      {screen === "log-workout" && <WorkoutLogger onBack={() => setScreen("home")} />}
       {screen === "log-food"    && <LogFoodScreen onDone={() => setScreen("done")} />}
       {screen === "done"        && <DoneScreen onHome={() => setScreen("home")} />}
     </Phone>
