@@ -28,6 +28,6 @@ Workout history and ELO are stored using localStorage. The data persists between
 
 The current mechanics prototype does not require AI or external API calls.
 
-### Failure
+### Break Log
 
 The core workout loop does not depend on an external API, so API failure is not currently an issue. If browser storage is cleared, locally saved workout history and ELO will also be cleared.
