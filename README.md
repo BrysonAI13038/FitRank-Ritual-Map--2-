@@ -31,3 +31,6 @@ The current mechanics prototype does not require AI or external API calls.
 ### Break Log
 
 The core workout loop does not depend on an external API, so API failure is not currently an issue. If browser storage is cleared, locally saved workout history and ELO will also be cleared.
+
+### Usability Test
+User said that the system worked well but every time they logged a workout it only gave them 12 elo which was frustrating.
