@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Introduction from "./Introduction";
 import type { SavedData } from "../workout/storage";
 import { latestComparisons, summarize } from "./data";
 import { exerciseName, PageHeading, RankCard, WorkoutList } from "./components";
@@ -7,7 +8,7 @@ const logAction = <a href="#/log-workout" className="app-button">+ Log Workout</
 export function Home({ data }: { data: SavedData }) {
   const stats = summarize(data.workouts);
   return <>
-    <PageHeading title="Your progress" subtitle="Your pace. Your work. Your FitRank." action={logAction} />
+    <PageHeading title="Your progress" subtitle="Log a workout, earn ELO, and watch your progress grow." action={logAction} />
     <div className="app-dashboard"><RankCard elo={data.elo} /><div className="app-stack">
       <div className="app-stats app-card">{[[stats.workouts,"Workouts"],[stats.thisWeek,"Workouts this week"],[stats.sets,"Sets completed"]].map(([value,label]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}</div>
       <section className="app-card"><p className="app-label">Keep building</p><blockquote>“Consistency builds strength.”</blockquote><div className="app-actions">{logAction}<a href="#/food" className="app-button app-secondary">+ Log Food</a></div></section>
@@ -36,6 +37,16 @@ export function Food() {
 }
 export function Settings({ data }: { data: SavedData | null }) {
   const [message, setMessage] = useState("");
+  const [reviewingIntroduction, setReviewingIntroduction] = useState(false);
+  const reviewContainer = useRef<HTMLDivElement>(null);
+  const introductionButton = useRef<HTMLButtonElement>(null);
+  const hasReviewed = useRef(false);
+  useEffect(() => {
+    if (reviewingIntroduction) {
+      hasReviewed.current = true;
+      reviewContainer.current?.focus();
+    } else if (hasReviewed.current) introductionButton.current?.focus();
+  }, [reviewingIntroduction]);
   function exportData() {
     if (!data) return;
     try {
@@ -45,5 +56,6 @@ export function Settings({ data }: { data: SavedData | null }) {
       setMessage("Your data export is ready to download.");
     } catch { setMessage("Couldn’t export your data. Please try again."); }
   }
-  return <><PageHeading title="Settings" subtitle="Your app. Your data." /><section className="app-card"><h2>Saved on this browser</h2><p>Workouts and ELO are stored on this device using browser storage. They stay between visits, but won’t sync to other browsers or devices.</p><p>Clearing this site’s browser data also clears your saved workouts and ELO.</p><button className="app-button app-secondary" onClick={exportData} disabled={!data}>Export workout data</button><p role="status">{message}</p></section><section className="app-card app-about"><h2>About FitRank</h2><p>Log workouts, earn ELO, and build your rank over time.</p><p>Weight is recorded in pounds. ELO never decreases.</p></section></>;
+  if (reviewingIntroduction) return <div ref={reviewContainer} tabIndex={-1} className="app-introduction-review"><Introduction reviewing onComplete={() => setReviewingIntroduction(false)} /></div>;
+  return <><PageHeading title="Settings" subtitle="Your app. Your data." /><section className="app-card"><h2>Saved on this browser</h2><p>Workouts and ELO are stored on this device using browser storage. They stay between visits, but won’t sync to other browsers or devices.</p><p>Clearing this site’s browser data also clears your saved workouts and ELO.</p><button className="app-button app-secondary" onClick={exportData} disabled={!data}>Export workout data</button><p role="status">{message}</p></section><section className="app-card app-about"><h2>About FitRank</h2><p>Log workouts, earn ELO, and build your rank over time.</p><p>Weight is recorded in pounds. ELO never decreases.</p><button ref={introductionButton} type="button" className="app-button app-secondary" onClick={() => setReviewingIntroduction(true)}>View introduction</button></section></>;
 }

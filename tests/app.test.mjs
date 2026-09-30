@@ -47,3 +47,35 @@ test('food does not pretend to save; settings has no fake account controls',()=>
   assert.match(render(Settings,{data}),/Export workout data/);
   assert.doesNotMatch(render(Settings,{data}),/Sign in|Password/);
 });
+const { hasSeenIntroduction, completeIntroduction } = load('src/app/introductionPreference.ts');
+const { default: Introduction } = load('src/app/Introduction.tsx');
+test('introduction completion persists independently of workout data',()=>{
+  const saved = new Map([['fitrank.workouts.v1','existing workout data']]);
+  const storage = { getItem:key=>saved.get(key)??null, setItem:(key,value)=>saved.set(key,value) };
+  assert.equal(hasSeenIntroduction(storage),false);
+  assert.equal(completeIntroduction(storage),true);
+  assert.equal(hasSeenIntroduction(storage),true);
+  assert.equal(saved.get('fitrank.workouts.v1'),'existing workout data');
+  assert.equal(saved.size,2);
+});
+test('unavailable preference storage does not throw or falsely report saving',()=>{
+  assert.equal(hasSeenIntroduction({getItem:()=>{throw new Error('blocked');}}),false);
+  assert.equal(completeIntroduction({setItem:()=>{throw new Error('blocked');}}),false);
+});
+test('introduction is concise and includes the rank order and completion action',()=>{
+  const html=render(Introduction,{onComplete:()=>{}});
+  assert.match(html,/Start FitRank/);
+  assert.match(html,/ELO never decreases/);
+  assert.match(html,/Bronze.*Silver.*Gold.*Platinum.*Diamond.*Elite/);
+  assert.match(render(Introduction,{onComplete:()=>{},reviewing:true}),/Back to Settings/);
+  assert.match(render(Settings,{data}),/View introduction/);
+});
+test('home and progress include collapsed, native keyboard-accessible ELO help',()=>{
+  for (const component of [Home,Progress]) {
+    const html=render(component,{data});
+    assert.match(html,/<details class="app-elo-help"><summary>What is ELO\?<\/summary>/);
+    assert.match(html,/Your ELO never decreases/);
+    assert.doesNotMatch(html,/<details[^>]* open/);
+  }
+  assert.match(render(Home,{data}),/Log a workout, earn ELO/);
+});

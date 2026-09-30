@@ -7,12 +7,19 @@ export const exerciseName = (id: string) => exercises.find(exercise => exercise.
 export function PageHeading({ title, subtitle, action }: { title: string; subtitle: string; action?: ReactNode }) {
   return <header className="app-page-heading"><div><h1>{title}</h1><p>{subtitle}</p></div>{action}</header>;
 }
+export function EloExplanation() {
+  return <details className="app-elo-help">
+    <summary>What is ELO?</summary>
+    <p>ELO is FitRank's progress score. You earn it by completing workouts and improving your performance. More ELO moves you through FitRank's ranks. Your ELO never decreases.</p>
+  </details>;
+}
 export function RankCard({ elo }: { elo: number }) {
   const progress = rankProgress(elo);
   return <section className="app-card app-rank" aria-label="Your rank and ELO">
     <div className="app-emblem" aria-hidden="true"><span>{progress.rank[0]}</span></div>
     <p className="app-label">Current rank</p><h2>{progress.rank}</h2>
     <p className="app-elo">{elo.toLocaleString()}</p><p className="app-label">ELO</p>
+    <EloExplanation />
     <div className="app-rank-track" role="progressbar" aria-label={progress.next ? `Progress to ${progress.next}` : "Elite rank achieved"} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress.percent)}><div style={{ width: `${progress.percent}%` }} /></div>
     <div className="app-rank-labels"><span>{progress.rank}</span><span>{progress.next ?? "Highest rank"}</span></div>
     <p className="app-accent">{progress.next ? `${progress.remaining.toLocaleString()} ELO to ${progress.next}` : "Elite achieved. Keep building."}</p>
