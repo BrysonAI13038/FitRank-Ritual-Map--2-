@@ -1,5 +1,12 @@
 # FitRank Changelog
 
+## 2026-09-29 — Final Tool Revision
+
+- Added first-time onboarding after a tester was confused about FitRank's purpose.
+- Added a reusable "What is ELO?" explanation after the tester did not understand ELO or ranks.
+- Improved Home page guidance to make the main action clearer.
+- These changes came directly from V0 usability testing.
+
 ## 2026-09-24
 
 - FitRank moved from a school interface prototype into a working app structure with Home, Workouts, Progress, Food, and Settings sections.
