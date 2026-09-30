@@ -68,7 +68,7 @@ test('introduction is concise and includes the rank order and completion action'
   assert.match(html,/ELO never decreases/);
   assert.match(html,/Bronze.*Silver.*Gold.*Platinum.*Diamond.*Elite/);
   assert.match(render(Introduction,{onComplete:()=>{},reviewing:true}),/Back to Settings/);
-  assert.match(render(Settings,{data}),/View introduction/);
+  assert.match(render(Settings,{data}),/View FitRank Introduction/);
 });
 test('home and progress include collapsed, native keyboard-accessible ELO help',()=>{
   for (const component of [Home,Progress]) {
